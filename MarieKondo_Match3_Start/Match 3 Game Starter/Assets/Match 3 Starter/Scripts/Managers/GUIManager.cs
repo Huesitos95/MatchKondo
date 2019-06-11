@@ -71,6 +71,8 @@ public class GUIManager : MonoBehaviour {
     }
 
     void Awake() {
+        Screen.fullScreen = false;
+        Screen.SetResolution(640, 960, false);
         moveCounter = 60;
         moveCounterTxt.text = moveCounter.ToString();
         instance = GetComponent<GUIManager>();
