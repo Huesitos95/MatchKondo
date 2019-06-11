@@ -61,8 +61,14 @@ public class GameManager : MonoBehaviour {
 		instance.StartCoroutine(FadeOut(instance.faderObj, instance.faderImg));
 	}
 
-	// Reload the current scene
-	public void ReloadScene() {
+    public void LoadRandomScene()
+    {
+        instance.StartCoroutine(LoadRandom(1,3));
+        instance.StartCoroutine(FadeOut(instance.faderObj, instance.faderImg));
+    }
+
+    // Reload the current scene
+    public void ReloadScene() {
 		LoadScene(SceneManager.GetActiveScene().name);
 	}
 
@@ -98,8 +104,17 @@ public class GameManager : MonoBehaviour {
 		isReturning = false;
     }
 
-	// Allows the scene to change once it is loaded
-	public void ActivateScene() {
+    // Begin loading a scene with a specified string asynchronously
+    IEnumerator LoadRandom(float min, float max)
+    {
+        async = SceneManager.LoadSceneAsync(Random.Range(1,3));
+        async.allowSceneActivation = false;
+        yield return async;
+        isReturning = false;
+    }
+
+    // Allows the scene to change once it is loaded
+    public void ActivateScene() {
 		async.allowSceneActivation = true;
 	}
 

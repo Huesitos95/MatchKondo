@@ -24,6 +24,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class BoardManager : MonoBehaviour {
 	public static BoardManager instance;
 	public List<Sprite> characters = new List<Sprite>();
@@ -111,7 +112,8 @@ public class BoardManager : MonoBehaviour {
 
         for (int i = 0; i < nullCount; i++)
         { // 3
-            GUIManager.instance.Score += 50; //Puntuació a afegir
+            
+            
             yield return new WaitForSeconds(shiftDelay);// 4
             for (int k = 0; k < renders.Count - 1; k++)
             { // 5

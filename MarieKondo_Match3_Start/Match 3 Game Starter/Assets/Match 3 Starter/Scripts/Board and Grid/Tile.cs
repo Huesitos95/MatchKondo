@@ -22,35 +22,41 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class Tile : MonoBehaviour {
-	private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
-	private static Tile previousSelected = null;
+public class Tile : MonoBehaviour
+{
+    private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
+    private static Tile previousSelected = null;
 
-	private SpriteRenderer render;
-	private bool isSelected = false;
 
-	private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
+    private SpriteRenderer render;
+    private bool isSelected = false;
+
+    private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
     private bool matchFound = false;
 
-    void Awake() {
-		render = GetComponent<SpriteRenderer>();
+    void Awake()
+    {
+        render = GetComponent<SpriteRenderer>();
     }
 
-	private void Select() {
-		isSelected = true;
-		render.color = selectedColor;
-		previousSelected = gameObject.GetComponent<Tile>();
-		SFXManager.instance.PlaySFX(Clip.Select);
-	}
+    private void Select()
+    {
+        isSelected = true;
+        render.color = selectedColor;
+        previousSelected = gameObject.GetComponent<Tile>();
+        SFXManager.instance.PlaySFX(Clip.Select);
+    }
 
-	private void Deselect() {
-		isSelected = false;
-		render.color = Color.white;
-		previousSelected = null;
-	}
+    private void Deselect()
+    {
+        isSelected = false;
+        render.color = Color.white;
+        previousSelected = null;
+    }
 
     void OnMouseDown()
     {
@@ -101,10 +107,10 @@ public class Tile : MonoBehaviour {
         SFXManager.instance.PlaySFX(Clip.Swap); // 6
     }
 
-    private GameObject  GetAdjacent(Vector2 castDir)
+    private GameObject GetAdjacent(Vector2 castDir)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
-        if(hit.collider != null)
+        if (hit.collider != null)
         {
             return hit.collider.gameObject;
         }
@@ -114,7 +120,7 @@ public class Tile : MonoBehaviour {
     private List<GameObject> GetAllAdjacentTiles()
     {
         List<GameObject> adjacentTiles = new List<GameObject>();
-        for(int i = 0; i < adjacentDirections.Length;i++)
+        for (int i = 0; i < adjacentDirections.Length; i++)
         {
             adjacentTiles.Add(GetAdjacent(adjacentDirections[i]));
         }
@@ -159,13 +165,62 @@ public class Tile : MonoBehaviour {
         ClearMatch(new Vector2[2] { Vector2.up, Vector2.down });
         if (matchFound)
         {
+            if (SceneManager.GetActiveScene().name == "Cocina")
+            {
+                if (render.sprite.name == "tenedor" || render.sprite.name == "plato" || render.sprite.name == "manopla")
+                {
+                    Debug.Log("Bien Cocina");
+                    GUIManager.instance.Score += 150;
+                }
+                else
+                {
+                    Debug.Log("Normal Cocina");
+                    GUIManager.instance.Score += 50;
+                }
+            }
+
+            if (SceneManager.GetActiveScene().name == "Armario")
+            {
+                if (render.sprite.name == "corbata" || render.sprite.name == "botas" || render.sprite.name == "camisa")
+                {
+                    Debug.Log("Bien Armario");
+                    GUIManager.instance.Score += 150;
+                }
+                else
+                {
+                    Debug.Log("Normal Armario");
+                    GUIManager.instance.Score += 50;
+                }
+
+            }
+
+            if (SceneManager.GetActiveScene().name == "Baño")
+            {
+                if (render.sprite.name == "pato" || render.sprite.name == "esponja" || render.sprite.name == "toalla")
+                {
+                    Debug.Log("Bien Baño");
+                    GUIManager.instance.Score += 150;
+                }
+                else
+                {
+                    Debug.Log("Normal Baño");
+                    GUIManager.instance.Score += 50;
+                }
+            }
+
+
+
             render.sprite = null;
             matchFound = false;
             StopCoroutine(BoardManager.instance.FindNullTiles());
             StartCoroutine(BoardManager.instance.FindNullTiles());
-    
+
+
+
+
             SFXManager.instance.PlaySFX(Clip.Clear);
             GUIManager.instance.MoveCounter--;
         }
     }
 }
+
